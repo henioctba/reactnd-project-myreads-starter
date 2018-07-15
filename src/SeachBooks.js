@@ -1,10 +1,58 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { debounce } from "throttle-debounce";
+import BooksGrid from "./BooksGrid";
+import * as BooksAPI from "./BooksAPI";
 
 class SeachBooks extends Component {
+  constructor() {
+    super();
+    this.callAjax = debounce(300, this.callAjax);
+  }
+
+  state = {
+    books: [],
+    query: ""
+  };
+
+  seachQuery(query) {
+    try {
+      query = query.trim();
+      let listBooks = [];
+
+      if (query) {
+        BooksAPI.search(query).then(books => {
+          if (!books.error) {
+            let tListaBookStatus = this.props.read.concat(
+              this.props.currentlyReading.concat(this.props.wantToRead)
+            );
+
+            books.forEach(function(emp) {
+              var company = tListaBookStatus.filter(function(comp) {
+                return comp.id === emp.id;
+              })[0];
+
+              if (company) {
+                listBooks.push(company);
+              } else {
+                listBooks.push(emp);
+              }
+            });
+
+            this.setState({ books: listBooks });
+          } else {
+            this.setState({ books: [] });
+          }
+        });
+      } else {
+        this.setState({ books: [], query: query });
+      }
+    } catch (e) {
+      alert(e);
+    }
+  }
+
   static propTypes = {
-    onSeachQuery: PropTypes.func.isRequired,
-    books: PropTypes.array,
     showSearchPage: PropTypes.string,
     onCloseSeach: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired
@@ -23,15 +71,21 @@ class SeachBooks extends Component {
   };
 
   defaultValueDef = book => {
-    if (book.shelf){
-      return book.shelf
-    }else{
-      return "none"
+    if (book.shelf) {
+      return book.shelf;
+    } else {
+      return "none";
     }
+  };
+  searchChange(e) {
+    this.callAjax(e.target.value);
+  }
+  callAjax(value) {
+    this.seachQuery(value);
   }
 
   render() {
-    const { onSeachQuery, books, onCloseSeach, onUpdate } = this.props;
+    const { onCloseSeach, onUpdate } = this.props;
 
     return (
       <div className="list-books">
@@ -55,49 +109,12 @@ class SeachBooks extends Component {
                   <input
                     type="text"
                     placeholder="Search by title or author"
-                    onChange={event => onSeachQuery(event.target.value)}
+                    onKeyUp={this.searchChange.bind(this)}
                   />
-                  <div>
-                    {books.length > 0 && (
-                      <ol className="books-grid">
-                        {books.map(book => (
-                          <li key={book.id}>
-                            <div className="book">
-                              <div className="book-top">
-                                <div
-                                  className="book-cover"
-                                  style={this.styleDef(book)}
-                                />
-
-                                <div className="book-shelf-changer">
-                                    <select
-                                        defaultValue={ this.defaultValueDef(book)}
-                                        onChange={(event) =>   onUpdate(book, event.target.value)}
-                                    >
-                                    <option value="move" disabled>
-                                      Move to...
-                                    </option>
-                                    <option value="currentlyReading">
-                                      Currently Reading
-                                    </option>
-                                    <option value="wantToRead">
-                                      Want to Read
-                                    </option>
-                                    <option value="read">Read</option>
-                                    <option value="none">None</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div className="book-title">{book.title}</div>
-                              <div className="book-authors">{book.authors}</div>
-                            </div>
-                          </li>
-                        ))}
-                      </ol>
-                    )}
-                  </div>
+                  <BooksGrid books={this.state.books} onUpdate={onUpdate} />
                 </div>
               </div>
+
               <div className="search-books-results">
                 <ol className="books-grid" />
               </div>
