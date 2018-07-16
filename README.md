@@ -4,12 +4,13 @@ This is the starter template for the final assessment project for Udacity's Reac
 
 Of course, you are free to start this project from scratch if you wish! Just be sure to use [Create React App](https://github.com/facebookincubator/create-react-app) to bootstrap the project.
 
-## TL;DR
+## Installation
 
-To get started developing right away:
-
-* install all project dependencies with `npm install`
-* start the development server with `npm start`
+```js
+$ git clone https://github.com/henioctba/reactnd-project-myreads-starter.git
+$ cd  reactnd-project-myreads-starter
+$ npm install
+```
 
 ## What You're Getting
 ```bash
@@ -25,12 +26,16 @@ To get started developing right away:
     ├── App.js # This is the root of your app. Contains static HTML right now.
     ├── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
     ├── BooksAPI.js # A JavaScript API for the provided Udacity backend. Instructions for the methods are below.
+    ├── BooksGrid.js # Functional Component list books
     ├── icons # Helpful images for your app. Use at your discretion.
     │   ├── add.svg
     │   ├── arrow-back.svg
     │   └── arrow-drop-down.svg
     ├── index.css # Global styles. You probably won't need to change anything here.
-    └── index.js # You should not need to modify this file. It is used for DOM rendering only.
+    ├── index.js # You should not need to modify this file. It is used for DOM rendering only.
+    ├── ListBooks.js # My bookshelves
+    └── SeachBooks.js # Seach books
+
 ```
 
 Remember that good React design practice is to create new JS files for each component and use import/require statements to include them where they are needed.
