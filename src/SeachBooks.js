@@ -16,12 +16,12 @@ class SeachBooks extends Component {
   };
 
   seachQuery(query) {
-    try {
-      query = query.trim();
-      let listBooks = [];
+    query = query.trim();
+    let listBooks = [];
 
-      if (query) {
-        BooksAPI.search(query).then(books => {
+    if (query) {
+      BooksAPI.search(query)
+        .then(books => {
           if (!books.error) {
             let tListaBookStatus = this.props.read.concat(
               this.props.currentlyReading.concat(this.props.wantToRead)
@@ -43,12 +43,12 @@ class SeachBooks extends Component {
           } else {
             this.setState({ books: [] });
           }
+        })
+        .catch(error => {
+          alert(error);
         });
-      } else {
-        this.setState({ books: [], query: query });
-      }
-    } catch (e) {
-      alert(e);
+    } else {
+      this.setState({ books: [], query: query });
     }
   }
 

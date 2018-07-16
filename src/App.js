@@ -7,16 +7,8 @@ import PropTypes from "prop-types";
 import SeachBooks from "./SeachBooks";
 import { Link } from "react-router-dom";
 
-
 class BooksApp extends Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-
     currentlyReading: [],
     wantToRead: [],
     read: [],
@@ -31,8 +23,8 @@ class BooksApp extends Component {
   };
 
   componentDidMount() {
-    try {
-      BooksAPI.getAll().then(books => {
+    BooksAPI.getAll()
+      .then(books => {
         this.setState({
           currentlyReading: books.filter(books => {
             return books.shelf === "currentlyReading";
@@ -47,20 +39,18 @@ class BooksApp extends Component {
             return books.shelf === "none";
           })
         });
+      }).catch(error => {
+        alert(error);
       });
-    } catch (e) {
-      alert(e);
-    }
   }
 
   onUpdate = (book, shelf) => {
-    try {
-      BooksAPI.update(book, shelf).then(book => {
+    BooksAPI.update(book, shelf)
+      .then(book => {
         this.componentDidMount();
+      }).catch(error => {
+        alert(error);
       });
-    } catch (e) {
-      alert(e);
-    }
   };
 
   render() {
@@ -70,10 +60,9 @@ class BooksApp extends Component {
           path="/seach"
           render={({ history }) => (
             <SeachBooks
-              currentlyReading={this.state.currentlyReading }
+              currentlyReading={this.state.currentlyReading}
               wantToRead={this.state.wantToRead}
               read={this.state.read}
-          
               onCloseSeach={() => {
                 history.push("/");
               }}
@@ -118,9 +107,8 @@ class BooksApp extends Component {
                     }}
                   />
                 </div>
-
               </div>
-              
+
               <div className="open-search">
                 <Link to="/seach" className="open-search">
                   Add a book
