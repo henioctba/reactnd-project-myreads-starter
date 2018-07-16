@@ -5,7 +5,7 @@ import ListBooks from "./ListBooks";
 import * as BooksAPI from "./BooksAPI";
 import PropTypes from "prop-types";
 import SeachBooks from "./SeachBooks";
-import { Link } from "react-router-dom";
+
 
 class BooksApp extends Component {
   state = {
@@ -39,7 +39,8 @@ class BooksApp extends Component {
             return books.shelf === "none";
           })
         });
-      }).catch(error => {
+      })
+      .catch(error => {
         alert(error);
       });
   }
@@ -48,7 +49,8 @@ class BooksApp extends Component {
     BooksAPI.update(book, shelf)
       .then(book => {
         this.componentDidMount();
-      }).catch(error => {
+      })
+      .catch(error => {
         alert(error);
       });
   };
@@ -76,45 +78,14 @@ class BooksApp extends Component {
           exact
           path="/"
           render={() => (
-            <div className="list-books">
-              <div className="list-books-title">
-                <h1>MyReads</h1>
-              </div>
-              <div className="list-books-content">
-                <div>
-                  <ListBooks
-                    bookStatus="Currently Reading"
-                    shelf="currentlyReading"
-                    books={this.state.currentlyReading}
-                    onUpdate={(book, shelf) => {
-                      this.onUpdate(book, shelf);
-                    }}
-                  />
-                  <ListBooks
-                    bookStatus="Want to Read"
-                    shelf="wantToRead"
-                    books={this.state.wantToRead}
-                    onUpdate={(book, shelf) => {
-                      this.onUpdate(book, shelf);
-                    }}
-                  />
-                  <ListBooks
-                    bookStatus="Read"
-                    shelf="read"
-                    books={this.state.read}
-                    onUpdate={(book, shelf) => {
-                      this.onUpdate(book, shelf);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="open-search">
-                <Link to="/seach" className="open-search">
-                  Add a book
-                </Link>
-              </div>
-            </div>
+            <ListBooks
+              booksCurrentlyReading={this.state.currentlyReading}
+              booksWantToRead={this.state.wantToRead}
+              booksRead={this.state.read}
+              onUpdate={(book, shelf) => {
+                this.onUpdate(book, shelf);
+              }}
+            />
           )}
         />
       </div>

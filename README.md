@@ -8,6 +8,7 @@ Aplicação de estante de livros que permite selecionar e classificar os livros 
 $ git clone https://github.com/henioctba/reactnd-project-myreads-starter.git
 $ cd  reactnd-project-myreads-starter
 $ npm install
+$ npm start
 ```
 
 ## O que você está obtendo
